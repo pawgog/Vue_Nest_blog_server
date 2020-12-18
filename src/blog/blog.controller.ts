@@ -5,10 +5,12 @@ import {
   HttpStatus,
   Param,
   NotFoundException,
+  Query,
+  Delete,
 } from '@nestjs/common';
 import { BlogService } from './blog.service';
 import { CreatePostDTO } from './dto/create-post.dto';
-// import { ValidateObjectId } from '../blog/shared/pipes/validate-object-id.pipes';
+import { ValidateObjectId } from '../blog/shared/pipes/validate-object-id.pipes';
 
 @Controller('blog')
 export class BlogController {
@@ -27,5 +29,18 @@ export class BlogController {
       throw new NotFoundException();
     }
     return blog;
+  }
+
+  @Delete('/delete')
+  async deletePost(
+    @Res() res,
+    @Query('postID', new ValidateObjectId()) postID,
+  ) {
+    const deletedPost = await this.blogService.deletePost(postID);
+    if (!deletedPost) throw new NotFoundException('Post does not exist!');
+    return res.status(HttpStatus.OK).json({
+      message: 'Post has been deleted!',
+      post: deletedPost,
+    });
   }
 }
