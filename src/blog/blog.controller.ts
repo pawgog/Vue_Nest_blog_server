@@ -6,6 +6,8 @@ import {
   Param,
   NotFoundException,
   Query,
+  Body,
+  Post,
   Delete,
 } from '@nestjs/common';
 import { BlogService } from './blog.service';
@@ -21,6 +23,15 @@ export class BlogController {
     const posts = await this.blogService.getPosts();
     return res.status(HttpStatus.OK).json(posts);
   }
+
+  @Post('/post')
+  async addPost(@Res() res, @Body() createPostDTO: CreatePostDTO) {
+    const newPost = await this.blogService.addPost(createPostDTO);
+    return res.status(HttpStatus.OK).json({
+      message: 'Post has been submitted successfully!',
+      post: newPost,
+  });
+}
 
   @Get('/post/:slug')
   async show(@Param('slug') slug): Promise<CreatePostDTO> {
