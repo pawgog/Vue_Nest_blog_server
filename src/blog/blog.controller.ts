@@ -30,8 +30,8 @@ export class BlogController {
     return res.status(HttpStatus.OK).json({
       message: 'Post has been submitted successfully!',
       post: newPost,
-  });
-}
+    });
+  }
 
   @Get('/post/:slug')
   async show(@Param('slug') slug): Promise<CreatePostDTO> {

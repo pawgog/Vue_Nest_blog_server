@@ -20,6 +20,8 @@ export class BlogService {
 
   async addPost(createPostDTO: CreatePostDTO): Promise<Post> {
     const newPost = await new this.postModel(createPostDTO);
+    const slug = { slug: this.slugify(newPost.title) };
+    Object.assign(newPost, slug);
     return newPost.save();
   }
 
@@ -35,5 +37,12 @@ export class BlogService {
   async deletePost(postID): Promise<any> {
     const deletedPost = await this.postModel.findByIdAndRemove(postID);
     return deletedPost;
+  }
+
+  slugify(title: string) {
+    return title
+      .toLowerCase()
+      .replace(/[^\w ]+/g, '')
+      .replace(/ +/g, '-');
   }
 }
