@@ -20,8 +20,12 @@ export class BlogService {
 
   async addPost(createPostDTO: CreatePostDTO): Promise<Post> {
     const newPost = await new this.postModel(createPostDTO);
+    const image =
+      typeof newPost.img === 'undefined'
+        ? { img: '//via.placeholder.com/200' }
+        : newPost.img;
     const slug = { slug: this.slugify(newPost.title) };
-    Object.assign(newPost, slug);
+    Object.assign(newPost, image, slug);
     return newPost.save();
   }
 
