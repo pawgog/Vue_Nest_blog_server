@@ -22,7 +22,7 @@ export class BlogService {
     const newPost = await new this.postModel(createPostDTO);
     const image =
       typeof newPost.img === 'undefined'
-        ? { img: '//via.placeholder.com/200' }
+        ? { img: '//via.placeholder.com/180' }
         : newPost.img;
     const slug = { slug: this.slugify(newPost.title) };
     Object.assign(newPost, image, slug);
@@ -33,13 +33,15 @@ export class BlogService {
     const editedPost = await this.postModel.findByIdAndUpdate(
       postID,
       createPostDTO,
-      { new: true },
+      { new: true, useFindAndModify: false },
     );
     return editedPost;
   }
 
   async deletePost(postID): Promise<any> {
-    const deletedPost = await this.postModel.findByIdAndRemove(postID);
+    const deletedPost = await this.postModel.findByIdAndRemove(postID, {
+      useFindAndModify: false,
+    });
     return deletedPost;
   }
 

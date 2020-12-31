@@ -5,7 +5,6 @@ import {
   HttpStatus,
   Param,
   NotFoundException,
-  Query,
   Body,
   Post,
   Delete,
@@ -42,11 +41,8 @@ export class BlogController {
     return blog;
   }
 
-  @Delete('/delete')
-  async deletePost(
-    @Res() res,
-    @Query('postID', new ValidateObjectId()) postID,
-  ) {
+  @Delete('/delete/:postID')
+  async remove(@Res() res, @Param('postID') postID: ValidateObjectId) {
     const deletedPost = await this.blogService.deletePost(postID);
     if (!deletedPost) throw new NotFoundException('Post does not exist!');
     return res.status(HttpStatus.OK).json({
