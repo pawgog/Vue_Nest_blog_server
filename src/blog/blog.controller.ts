@@ -7,6 +7,7 @@ import {
   NotFoundException,
   Body,
   Post,
+  Put,
   Delete,
 } from '@nestjs/common';
 import { BlogService } from './blog.service';
@@ -39,6 +40,20 @@ export class BlogController {
       throw new NotFoundException();
     }
     return blog;
+  }
+
+  @Put('/edit/:postID')
+  async editPost(
+    @Res() res,
+    @Param('postID') postID: ValidateObjectId,
+    @Body() createPostDTO: CreatePostDTO,
+  ) {
+    const editedPost = await this.blogService.editPost(postID, createPostDTO);
+    if (!editedPost) throw new NotFoundException('Post does not exist!');
+    return res.status(HttpStatus.OK).json({
+      message: 'Post has been successfully updated',
+      post: editedPost,
+    });
   }
 
   @Delete('/delete/:postID')

@@ -35,7 +35,9 @@ export class BlogService {
       createPostDTO,
       { new: true, useFindAndModify: false },
     );
-    return editedPost;
+    const slug = { slug: this.slugify(editedPost.title) };
+    Object.assign(editedPost, slug);
+    return editedPost.save();
   }
 
   async deletePost(postID): Promise<any> {
